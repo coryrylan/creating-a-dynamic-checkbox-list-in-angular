@@ -1,0 +1,14 @@
+<p>
+  <a href="https://coryrylan.com/blog/creating-a-dynamic-checkbox-list-in-angular">Dynamic Checkbox List with FormBuilder</a>
+</p>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label formArrayName="orders" *ngFor="let order of orderControls; let i = index">
+    <input type="checkbox" [formControlName]="i">
+    {{ordersData[i].name}}
+  </label>
+
+  <div *ngIf="!form.valid">At least one order must be selected</div>
+  <br>
+  <button [disabled]="!form.valid">submit</button>
+</form>
