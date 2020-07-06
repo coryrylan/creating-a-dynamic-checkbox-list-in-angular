@@ -11,16 +11,14 @@ export class AppComponent {
   form: FormGroup;
   ordersData = [];
 
-  get orderControls() {
-    return (this.form.controls.orders as FormArray).controls;
+  get ordersFormArray() {
+    return this.form.controls.orders as FormArray;
   }
 
   constructor(private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       orders: new FormArray([], minSelectedCheckboxes(1))
     });
-
-    this.form
 
     // async orders
     of(this.getOrders()).subscribe(orders => {
@@ -29,15 +27,12 @@ export class AppComponent {
     });
 
     // synchronous orders
-    // this.orders = this.getOrders();
+    // this.ordersData = this.getOrders();
     // this.addCheckboxes();
   }
 
   private addCheckboxes() {
-    this.ordersData.forEach((o, i) => {
-      const control = new FormControl(i === 0); // if first item set to true, else false
-      this.orderControls.push(control);
-    });
+    this.ordersData.forEach(() => this.ordersFormArray.push(new FormControl(false)));
   }
 
   getOrders() {
@@ -51,8 +46,9 @@ export class AppComponent {
 
   submit() {
     const selectedOrderIds = this.form.value.orders
-      .map((v, i) => v ? this.ordersData[i].id : null)
+      .map((checked, i) => checked ? this.ordersData[i].id : null)
       .filter(v => v !== null);
+
     console.log(selectedOrderIds);
   }
 }
