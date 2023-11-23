@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import 'zone.js';
@@ -7,7 +8,7 @@ import 'zone.js';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   template: `
     <p>
       <a href="https://coryrylan.com/blog/creating-a-dynamic-checkbox-list-in-angular">Dynamic Checkbox List with FormBuilder</a>
@@ -72,10 +73,10 @@ export class App {
 }
 
 function minSelectedCheckboxes(min = 1) {
-  const validator: ValidatorFn = (formArray: FormArray) => {
+  const validator: ValidatorFn = (formArray: any) => {
     const totalSelected = formArray.controls
-      .map(control => control.value)
-      .reduce((prev, next) => next ? prev + next : prev, 0);
+      .map((control: FormControl) => control.value)
+      .reduce((prev: number, next: number) => next ? prev + next : prev, 0);
 
     return totalSelected >= min ? null : { required: true };
   };
